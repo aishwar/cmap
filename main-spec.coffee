@@ -37,3 +37,45 @@ describe 'Parser', ->
       
       (expect @parser.parse input).toEqual result
   
+  
+  describe 'Parse children', ->
+  
+    it 'Converts Parent-Child key-value pair', ->
+      input = 
+      '''
+      Person:Aishwar
+        City:Toronto
+          Area:Scarborough
+      '''
+      
+      result =
+        Person:
+          name:"Aishwar"
+          City:
+            name:"Toronto"
+            Area:
+              name:"Scarborough"
+      
+      (expect @parser.parse input).toEqual result
+    
+    
+    it 'Converts Parent-Sibling-Child with key-value pair', ->
+      input = 
+      '''
+      Person:Aishwar
+        City:Chennai
+        City:Toronto
+          Area:Scarborough
+      '''
+      
+      result =
+        Person:
+          name:"Aishwar"
+          City:
+            [
+              { name:"Chennai" }
+              { name:"Toronto", Area: name:"Scarborough" } 
+            ]
+      
+      (expect @parser.parse input).toEqual result
+      

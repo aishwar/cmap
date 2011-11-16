@@ -1,23 +1,49 @@
+_ = require('./helper')._
+
 class Parser
   parse: (str) =>
     lines = str.split('\n')
     result = {}
+    @prevIndent = 0
+    @wholeKey = []
     
-    lines.forEach (line) ->
+    lines.forEach (line) =>
+      @indent = _.indents(line)
+      line = _.trim(line)
+      
       [key, value...] = line.split(':')
       value = value.join(':')
       
-      if (result[key])
+      if (@indent == @prevIndent)
+        @wholeKey.pop()
+        @wholeKey.push(key)
+      else if (@indent > @prevIndent)
+        @wholeKey.push(key)
+      
+      @setValue(result, @wholeKey, value)
+      
+      @prevIndent = @indent
+    result
+  
+  getLastItem: (result, key) ->
+    if ((result = result?[key]) instanceof Array)
+      result = result[result.length - 1]
+    result
+  
+  setValue: (result, key, val) ->
+    [parentProps..., childProp] = key
+    parentProps.forEach (prop) =>
+      result =  @getLastItem(result, prop)
+    
+    if (result)
+      if (result[childProp])
         # If this is the first time there is a clash, convert the value 
         # into an Array that stores all values for this key
-        result[key] = [ result[key] ] if !(result[key] instanceof Array)
-        # Put the new value into the array
-        result[key].push({ name:value })
+        result[childProp] = [ result[childProp] ] if !(result[childProp] instanceof Array)
+          # Put the new value into the array
+        result[childProp].push({ name: val })
       else
-        result[key] = { name:value }
-    
-    result
-
+        result[childProp] = { name: val }
 
 exports.Parser = Parser
 
