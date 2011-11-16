@@ -5,4 +5,8 @@ describe 'Parser', ->
     @parser = new Parser
   
   it 'Converts key-value pair to JS map', ->
+    result = 
+      Person:
+        name:"Aishwar"
     
+    (expect @parser.parse 'Person:Aishwar').toEqual result
