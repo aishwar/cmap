@@ -1,3 +1,39 @@
+###
+When an element is given a value, it is the name property of that element
+to which the value is assigned.
+E.g.
+  "City:Toronto" will translate to "City: { name:Toronto }"
+
+
+The following illustrates the major steps on how the parser does it's 
+conversion:
+
+Source:
+  Person:Aishwar
+    City:Toronto
+    City:Scarborough
+
+Major Steps in Transformation:
+{ Person: { name:Aishwar} }
+{ Person: { 
+    name:Aishwar, 
+    City: { name:Toronto }
+  }
+}
+{ Person: {
+    name:Aishwar,
+    City: [ { name:Toronto } ]
+  }
+}
+{ Person: {
+    name:Aishwar
+    City: [
+      { name:Toronto },
+      { name:Scarborough }
+    ]
+  }
+}
+###
 _ = require('./helper')._
 
 class Parser
