@@ -19,6 +19,8 @@ class Parser
         @wholeKey.push(key)
       else if (@indent > @prevIndent)
         @wholeKey.push(key)
+      else
+        @wholeKey.pop()
       
       @setValue(result, @wholeKey, value)
       

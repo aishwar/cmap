@@ -59,7 +59,7 @@ describe 'Parser', ->
       (expect @parser.parse input).toEqual result
     
     
-    it 'Converts Parent-Sibling-Child with key-value pair', ->
+    it 'Converts Parent-Sibling-Child', ->
       input = 
       '''
       Person:Aishwar
@@ -79,3 +79,60 @@ describe 'Parser', ->
       
       (expect @parser.parse input).toEqual result
       
+    
+    it 'Converts Multiple Sibling-with-Child', ->
+      input = 
+      '''
+      Person:Aishwar
+        City:Chennai
+          Area:Nungambakkam
+        City:Toronto
+          Area:Scarborough
+      '''
+      
+      result =
+        Person:
+          name:"Aishwar"
+          City:
+            [
+              { name:"Chennai", Area: name:"Nungambakkam" }
+              { name:"Toronto", Area: name:"Scarborough" } 
+            ]
+      
+      (expect @parser.parse input).toEqual result
+      
+    
+    it 'Converts Multiple Sibling-with-Multiple-Children', ->
+      input = 
+      '''
+      Person:Aishwar
+        Address:Home
+          City:Toronto
+          Area:North York
+        Address:Work
+          City:Toronto
+          Area:Scarborough
+      '''
+      
+      result =
+        Person:
+          name:"Aishwar"
+          Address:
+            [
+              {
+                name:"Home"
+                City:
+                  name: "Toronto"
+                Area:
+                  name: "North York" 
+              }
+              {
+                name:"Work"
+                City:
+                  name: "Toronto"
+                Area:
+                  name: "Scarborough"
+              } 
+            ]
+      
+      (expect @parser.parse input).toEqual result
