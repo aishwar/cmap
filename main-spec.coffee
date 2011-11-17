@@ -145,3 +145,49 @@ describe 'Parser', ->
       result = {}
       
       (expect @parser.parse input).toEqual result
+    
+    it 'Converts when name is not specified on same line as item', ->
+      input =
+      '''
+        Person
+          name:Aishwar
+      '''
+      
+      result = {
+        Person:
+          name:"Aishwar"
+      }
+      
+      (expect @parser.parse input).toEqual result
+    
+    
+    it 'Converts when name is not specified', ->
+      input =
+      '''
+        Person
+          Address:Home
+            City:Toronto
+          Address:Work
+            City:Toronto
+            Area:North York
+      '''
+      
+      result = {
+        Person:
+          Address: [
+            {
+              name:"Home"
+              City:
+                name:"Toronto"
+            },
+            {
+              name:"Work"
+              City:
+                name:"Toronto"
+              Area:
+                name:"North York"
+            }
+          ]
+      }
+      
+      (expect @parser.parse input).toEqual result

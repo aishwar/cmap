@@ -46,7 +46,13 @@ class Parser
           # Put the new value into the array
         result[childProp].push({ name: val })
       else
-        result[childProp] = { name: val }
+        if (val)
+          if (childProp == 'name')
+            result[childProp] = val
+          else
+            result[childProp] = { name: val }
+        else
+          result[childProp] = {}
 
 exports.Parser = Parser
 

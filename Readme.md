@@ -16,13 +16,21 @@ to a Javascript map:
       Address: [
         {
           name:Home,
-          City:Toronto,
-          Area:Scaborough
+          City: {
+            name: Toronto
+          },
+          Area: {
+            name:Scaborough
+          }
         },
         {
           name:Work,
-          City:Toronto,
-          Area:North York
+          City: {
+            name:Toronto
+          },
+          Area: {
+            name:North York
+          }
         }
       ]
     }
