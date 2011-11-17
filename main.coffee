@@ -7,9 +7,6 @@ class Parser
     @prevIndent = 0
     @wholeKey = []
     
-    console.log()
-    console.log()
-    console.log(lines.length)
     lines.forEach (line) =>
       @indent = _.indents(line)
       line = _.trim(line)
