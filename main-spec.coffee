@@ -136,3 +136,12 @@ describe 'Parser', ->
             ]
       
       (expect @parser.parse input).toEqual result
+
+    it 'Converts blank input correctly', ->
+      input =
+      '''
+      '''
+      
+      result = {}
+      
+      (expect @parser.parse input).toEqual result
