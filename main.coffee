@@ -40,6 +40,7 @@ class Parser
   parse: (str) =>
     lines = str.split('\n')
     result = {}
+    indents = [ 0 ]
     prevIndent = 0
     wholeKey = []
     
@@ -51,17 +52,20 @@ class Parser
       [key, value...] = line.split(':')
       value = value.join(':')
       
-      if (indent == prevIndent)
+      if (indent == _.last(indents))
         wholeKey.pop()
-        wholeKey.push(key)
-      else if (indent > prevIndent)
-        wholeKey.push(key)
+        wholeKey.push key
+      else if (indent > _.last(indents))
+        indents.push indent
+        wholeKey.push key
       else
-        wholeKey.pop()
+        while (indent != _.last(indents))
+          throw 'ParserError: Input is likely malformed' if indents.length is 0
+          indents.pop()
+          wholeKey.pop()
       
       @setValue(result, wholeKey, value)
       
-      prevIndent = indent
     result
   
   getLastItem: (result, key) ->
@@ -79,7 +83,7 @@ class Parser
         # If this is the first time there is a clash, convert the value 
         # into an Array that stores all values for this key
         result[childProp] = [ result[childProp] ] if !(result[childProp] instanceof Array)
-          # Put the new value into the array
+        # Put the new value into the array
         result[childProp].push({ name: val })
       else
         if (val)

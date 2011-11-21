@@ -191,3 +191,50 @@ describe 'Parser', ->
       }
       
       (expect @parser.parse input).toEqual result
+    
+    
+    it 'Converts when properties read are multiple-indentation levels different', ->
+      # Moving from Area to Address, changes by 2 indentation levels
+      input =
+      '''
+        Person
+          Address:Home
+            City:Toronto
+              Area:Scarborough
+          Address:Work
+            City:Toronto
+              Area:North York
+      '''
+      
+      result = {
+        Person:
+          Address: [
+            {
+              name:"Home"
+              City:
+                name:"Toronto"
+                Area:
+                  name:"Scarborough"
+            },
+            {
+              name:"Work"
+              City:
+                name:"Toronto"
+                Area:
+                  name:"North York"
+            }
+          ]
+      }
+      
+      (expect @parser.parse input).toEqual result
+  
+  
+    it 'Fails gracefully when structure is malformed', ->
+      input =
+      '''
+        Person
+              Test
+            Test
+      '''
+      
+      (expect () => @parser.parse input).toThrow()
