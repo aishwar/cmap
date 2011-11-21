@@ -41,7 +41,6 @@ class Parser
     lines = str.split('\n')
     result = {}
     indents = [ 0 ]
-    prevIndent = 0
     wholeKey = []
     
     lines.forEach (line) =>
